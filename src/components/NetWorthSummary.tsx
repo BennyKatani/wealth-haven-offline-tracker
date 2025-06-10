@@ -6,6 +6,7 @@ import { formatCurrency, formatPercentage } from '@/utils/calculations';
 
 interface NetWorthSummaryProps {
   summary: NetWorthSummaryType;
+  key?: string; // Add key prop to force re-render when currency changes
 }
 
 export const NetWorthSummary = ({ summary }: NetWorthSummaryProps) => {

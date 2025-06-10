@@ -102,7 +102,10 @@ const Index = () => {
 
         {hasData ? (
           <div className="space-y-12">
-            <NetWorthSummary summary={summary} />
+            <NetWorthSummary 
+              summary={summary} 
+              key={`${settings.currency}-${settings.currencySymbol}`}
+            />
             <AccountsList
               accounts={accounts}
               onAccountAdded={handleAccountAdded}

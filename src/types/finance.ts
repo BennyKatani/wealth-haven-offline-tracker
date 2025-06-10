@@ -76,4 +76,5 @@ export const CURRENCIES = [
   { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
   { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
   { code: 'BRL', symbol: 'R$', name: 'Brazilian Real' },
+  { code: 'ILS', symbol: '₪', name: 'Israeli New Shekel' },
 ];

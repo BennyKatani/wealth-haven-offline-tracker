@@ -1,10 +1,12 @@
 
 import { Account, BalanceHistory, NetWorthSummary } from '@/types/finance';
+import { storageUtils } from './storage';
 
 export const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat('en-US', {
+  const settings = storageUtils.getSettings();
+  return new Intl.NumberFormat(settings.locale, {
     style: 'currency',
-    currency: 'USD',
+    currency: settings.currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
