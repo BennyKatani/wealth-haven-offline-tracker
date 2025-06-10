@@ -7,11 +7,15 @@ import { NetWorthSummary } from '@/components/NetWorthSummary';
 import { AccountsList } from '@/components/AccountsList';
 import { GoalsSection } from '@/components/GoalsSection';
 import { PrivacyBanner } from '@/components/PrivacyBanner';
+import { AddAccountDialog } from '@/components/AddAccountDialog';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 const Index = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -33,6 +37,7 @@ const Index = () => {
 
   const handleAccountAdded = () => {
     loadData();
+    setShowAddDialog(false);
   };
 
   const handleAccountUpdated = () => {
@@ -101,6 +106,16 @@ const Index = () => {
               <p className="text-muted-foreground mb-8">
                 Start by adding your first account to begin tracking your net worth and financial goals.
               </p>
+              
+              {/* Prominent CTA Button */}
+              <Button 
+                onClick={() => setShowAddDialog(true)}
+                className="mb-8 text-lg px-8 py-6 h-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+              >
+                <Plus className="h-6 w-6 mr-3" />
+                Add Your First Account
+              </Button>
+
               <div className="space-y-4">
                 <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-100">
                   <h3 className="font-semibold text-success mb-2">Step 1: Add Your Accounts</h3>
@@ -124,6 +139,25 @@ const Index = () => {
             </div>
           </div>
         )}
+
+        {/* Floating Action Button - shown when there are accounts */}
+        {hasData && (
+          <div className="fixed bottom-6 right-6">
+            <Button 
+              onClick={() => setShowAddDialog(true)}
+              className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90"
+              size="icon"
+            >
+              <Plus className="h-6 w-6" />
+            </Button>
+          </div>
+        )}
+
+        <AddAccountDialog
+          open={showAddDialog}
+          onOpenChange={setShowAddDialog}
+          onAccountAdded={handleAccountAdded}
+        />
       </div>
     </div>
   );
