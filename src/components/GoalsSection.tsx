@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Plus, Target, Calendar, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Goal } from '@/types/finance';
 import { formatCurrency } from '@/utils/calculations';
+import { AddGoalDialog } from '@/components/AddGoalDialog';
 
 interface GoalsSectionProps {
   goals: Goal[];
@@ -14,6 +14,11 @@ interface GoalsSectionProps {
 
 export const GoalsSection = ({ goals, onGoalAdded }: GoalsSectionProps) => {
   const [showAddDialog, setShowAddDialog] = useState(false);
+
+  const handleGoalAdded = () => {
+    onGoalAdded();
+    setShowAddDialog(false);
+  };
 
   const calculateProgress = (goal: Goal): number => {
     return Math.min((goal.currentAmount / goal.targetAmount) * 100, 100);
@@ -99,6 +104,12 @@ export const GoalsSection = ({ goals, onGoalAdded }: GoalsSectionProps) => {
           })}
         </div>
       )}
+
+      <AddGoalDialog
+        open={showAddDialog}
+        onOpenChange={setShowAddDialog}
+        onGoalAdded={handleGoalAdded}
+      />
     </div>
   );
 };

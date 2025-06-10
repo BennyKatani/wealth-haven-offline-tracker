@@ -30,6 +30,12 @@ export interface Goal {
   updatedAt: string;
 }
 
+export interface UserSettings {
+  currency: string;
+  currencySymbol: string;
+  locale: string;
+}
+
 export type AccountType = 
   | 'checking'
   | 'savings'
@@ -58,3 +64,16 @@ export interface NetWorthSummary {
   monthlyChange: number;
   changePercentage: number;
 }
+
+export const CURRENCIES = [
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
+  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
+  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
+  { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc' },
+  { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
+  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
+  { code: 'BRL', symbol: 'R$', name: 'Brazilian Real' },
+];

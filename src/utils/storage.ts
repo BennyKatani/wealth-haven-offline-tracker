@@ -1,10 +1,11 @@
 
-import { Account, BalanceHistory, Goal } from '@/types/finance';
+import { Account, BalanceHistory, Goal, UserSettings } from '@/types/finance';
 
 const STORAGE_KEYS = {
   ACCOUNTS: 'networth_accounts',
   HISTORY: 'networth_history',
   GOALS: 'networth_goals',
+  SETTINGS: 'networth_settings',
   LAST_UPDATE: 'networth_last_update'
 };
 
@@ -84,6 +85,20 @@ export const storageUtils = {
   deleteGoal(goalId: string): void {
     const goals = this.getGoals().filter(goal => goal.id !== goalId);
     this.saveGoals(goals);
+  },
+
+  // Settings
+  getSettings(): UserSettings {
+    const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+    return data ? JSON.parse(data) : {
+      currency: 'USD',
+      currencySymbol: '$',
+      locale: 'en-US'
+    };
+  },
+
+  saveSettings(settings: UserSettings): void {
+    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
   },
 
   // Utility

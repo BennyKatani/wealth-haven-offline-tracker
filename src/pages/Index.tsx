@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from 'react';
-import { Account, Goal } from '@/types/finance';
+import { Account, Goal, UserSettings } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
 import { calculateNetWorth } from '@/utils/calculations';
 import { NetWorthSummary } from '@/components/NetWorthSummary';
@@ -8,14 +7,17 @@ import { AccountsList } from '@/components/AccountsList';
 import { GoalsSection } from '@/components/GoalsSection';
 import { PrivacyBanner } from '@/components/PrivacyBanner';
 import { AddAccountDialog } from '@/components/AddAccountDialog';
+import { SettingsDialog } from '@/components/SettingsDialog';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
+import { Plus, Settings } from 'lucide-react';
 
 const Index = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [settings, setSettings] = useState<UserSettings>(storageUtils.getSettings());
   const [loading, setLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showSettingsDialog, setShowSettingsDialog] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -26,8 +28,10 @@ const Index = () => {
     try {
       const loadedAccounts = storageUtils.getAccounts();
       const loadedGoals = storageUtils.getGoals();
+      const loadedSettings = storageUtils.getSettings();
       setAccounts(loadedAccounts);
       setGoals(loadedGoals);
+      setSettings(loadedSettings);
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -53,6 +57,10 @@ const Index = () => {
     loadData();
   };
 
+  const handleSettingsUpdated = () => {
+    loadData();
+  };
+
   const summary = calculateNetWorth(accounts);
   const hasData = accounts.length > 0;
 
@@ -71,13 +79,23 @@ const Index = () => {
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-            Net Worth Tracker
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Track your financial progress with complete privacy. All data stays on your device.
-          </p>
+        <div className="flex justify-between items-start mb-8">
+          <div className="text-center flex-1">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+              Net Worth Tracker
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Track your financial progress with complete privacy. All data stays on your device.
+            </p>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => setShowSettingsDialog(true)}
+            className="ml-4"
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
         </div>
 
         <PrivacyBanner />
@@ -107,7 +125,6 @@ const Index = () => {
                 Start by adding your first account to begin tracking your net worth and financial goals.
               </p>
               
-              {/* Prominent CTA Button */}
               <Button 
                 onClick={() => setShowAddDialog(true)}
                 className="mb-8 text-lg px-8 py-6 h-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all duration-200"
@@ -157,6 +174,12 @@ const Index = () => {
           open={showAddDialog}
           onOpenChange={setShowAddDialog}
           onAccountAdded={handleAccountAdded}
+        />
+
+        <SettingsDialog
+          open={showSettingsDialog}
+          onOpenChange={setShowSettingsDialog}
+          onSettingsUpdated={handleSettingsUpdated}
         />
       </div>
     </div>
