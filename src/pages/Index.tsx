@@ -133,9 +133,9 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Adaptive Content: Show onboarding for new users OR dashboard for existing users */}
+        {/* Conditional Content Based on Data */}
         {!hasData ? (
-          // Onboarding content for new users - shown after key features
+          // NEW USER ONBOARDING - shown when no accounts exist
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
