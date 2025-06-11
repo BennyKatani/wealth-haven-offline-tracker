@@ -1,12 +1,12 @@
 
-import { TrendingUp, TrendingDown, DollarSign, Target } from 'lucide-react';
+import { TrendingUp, TrendingDown, Target } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { NetWorthSummary as NetWorthSummaryType } from '@/types/finance';
 import { formatCurrency, formatPercentage } from '@/utils/calculations';
 
 interface NetWorthSummaryProps {
   summary: NetWorthSummaryType;
-  key?: string; // Add key prop to force re-render when currency changes
+  key?: string;
 }
 
 export const NetWorthSummary = ({ summary }: NetWorthSummaryProps) => {
@@ -21,7 +21,7 @@ export const NetWorthSummary = ({ summary }: NetWorthSummaryProps) => {
         </CardHeader>
         <CardContent>
           <div className="flex items-center space-x-2">
-            <DollarSign className="h-8 w-8 text-primary" />
+            <Target className="h-8 w-8 text-primary" />
             <div>
               <div className="text-4xl font-bold text-foreground">
                 {formatCurrency(summary.netWorth)}

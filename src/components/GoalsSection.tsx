@@ -1,35 +1,92 @@
+
 import { useState } from 'react';
-import { Plus, Target, Calendar, TrendingUp } from 'lucide-react';
+import { Plus, Target, Calendar, TrendingUp, Pencil } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Goal } from '@/types/finance';
 import { formatCurrency } from '@/utils/calculations';
 import { AddGoalDialog } from '@/components/AddGoalDialog';
+import { EditGoalDialog } from '@/components/EditGoalDialog';
 
 interface GoalsSectionProps {
   goals: Goal[];
   onGoalAdded: () => void;
+  currentNetWorth: number;
 }
 
-export const GoalsSection = ({ goals, onGoalAdded }: GoalsSectionProps) => {
+export const GoalsSection = ({ goals, onGoalAdded, currentNetWorth }: GoalsSectionProps) => {
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const handleGoalAdded = () => {
     onGoalAdded();
     setShowAddDialog(false);
   };
 
+  const handleGoalUpdated = () => {
+    onGoalAdded(); // Reuse the same callback to refresh data
+    setShowEditDialog(false);
+    setEditingGoal(null);
+  };
+
+  const handleEditGoal = (goal: Goal) => {
+    setEditingGoal(goal);
+    setShowEditDialog(true);
+  };
+
   const calculateProgress = (goal: Goal): number => {
     return Math.min((goal.currentAmount / goal.targetAmount) * 100, 100);
   };
 
-  const calculateMonthsRemaining = (targetDate: string): number => {
+  const formatTimeRemaining = (targetDate: string): string => {
     const now = new Date();
     const target = new Date(targetDate);
     const diffTime = target.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays <= 0) {
+      return "Target date passed";
+    }
+    
+    if (diffDays < 7) {
+      return `${diffDays} days`;
+    } else if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      const remainingDays = diffDays % 7;
+      if (remainingDays === 0) {
+        return `${weeks} week${weeks > 1 ? 's' : ''}`;
+      }
+      return `${weeks} week${weeks > 1 ? 's' : ''} ${remainingDays} day${remainingDays > 1 ? 's' : ''}`;
+    } else if (diffDays < 365) {
+      const months = Math.floor(diffDays / 30);
+      const remainingDays = diffDays % 30;
+      if (remainingDays < 7) {
+        return `${months} month${months > 1 ? 's' : ''}`;
+      }
+      const weeks = Math.floor(remainingDays / 7);
+      return `${months} month${months > 1 ? 's' : ''} ${weeks} week${weeks > 1 ? 's' : ''}`;
+    } else {
+      const years = Math.floor(diffDays / 365);
+      const remainingDays = diffDays % 365;
+      const months = Math.floor(remainingDays / 30);
+      if (months === 0) {
+        return `${years} year${years > 1 ? 's' : ''}`;
+      }
+      return `${years} year${years > 1 ? 's' : ''} ${months} month${months > 1 ? 's' : ''}`;
+    }
+  };
+
+  const calculateMonthlyTarget = (goal: Goal): number => {
+    const now = new Date();
+    const target = new Date(goal.targetDate);
+    const diffTime = target.getTime() - now.getTime();
     const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
-    return Math.max(diffMonths, 0);
+    
+    if (diffMonths <= 0) return 0;
+    
+    return (goal.targetAmount - goal.currentAmount) / diffMonths;
   };
 
   return (
@@ -58,17 +115,25 @@ export const GoalsSection = ({ goals, onGoalAdded }: GoalsSectionProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {goals.map((goal) => {
             const progress = calculateProgress(goal);
-            const monthsRemaining = calculateMonthsRemaining(goal.targetDate);
-            const monthlyTarget = monthsRemaining > 0 
-              ? (goal.targetAmount - goal.currentAmount) / monthsRemaining 
-              : 0;
+            const timeRemaining = formatTimeRemaining(goal.targetDate);
+            const monthlyTarget = calculateMonthlyTarget(goal);
 
             return (
               <Card key={goal.id} className="border-0 shadow-lg gradient-card">
                 <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Target className="h-5 w-5 text-primary" />
-                    <span>{goal.name}</span>
+                  <CardTitle className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Target className="h-5 w-5 text-primary" />
+                      <span>{goal.name}</span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => handleEditGoal(goal)}
+                    >
+                      <Pencil className="h-3 w-3" />
+                    </Button>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -91,12 +156,14 @@ export const GoalsSection = ({ goals, onGoalAdded }: GoalsSectionProps) => {
                   <div className="flex justify-between items-center pt-2 border-t">
                     <div className="flex items-center space-x-1 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
-                      <span>{monthsRemaining} months left</span>
+                      <span>{timeRemaining}</span>
                     </div>
-                    <div className="flex items-center space-x-1 text-sm text-primary">
-                      <TrendingUp className="h-4 w-4" />
-                      <span>{formatCurrency(monthlyTarget)}/month</span>
-                    </div>
+                    {monthlyTarget > 0 && (
+                      <div className="flex items-center space-x-1 text-sm text-primary">
+                        <TrendingUp className="h-4 w-4" />
+                        <span>{formatCurrency(monthlyTarget)}/month</span>
+                      </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -109,6 +176,15 @@ export const GoalsSection = ({ goals, onGoalAdded }: GoalsSectionProps) => {
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
         onGoalAdded={handleGoalAdded}
+        currentNetWorth={currentNetWorth}
+      />
+
+      <EditGoalDialog
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        goal={editingGoal}
+        onGoalUpdated={handleGoalUpdated}
+        currentNetWorth={currentNetWorth}
       />
     </div>
   );

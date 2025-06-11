@@ -12,13 +12,23 @@ const STORAGE_KEYS = {
 export const storageUtils = {
   // Accounts
   getAccounts(): Account[] {
-    const data = localStorage.getItem(STORAGE_KEYS.ACCOUNTS);
-    return data ? JSON.parse(data) : [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.ACCOUNTS);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Error loading accounts:', error);
+      return [];
+    }
   },
 
   saveAccounts(accounts: Account[]): void {
-    localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
-    localStorage.setItem(STORAGE_KEYS.LAST_UPDATE, new Date().toISOString());
+    try {
+      localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
+      localStorage.setItem(STORAGE_KEYS.LAST_UPDATE, new Date().toISOString());
+      console.log('Accounts saved successfully');
+    } catch (error) {
+      console.error('Error saving accounts:', error);
+    }
   },
 
   addAccount(account: Account): void {
@@ -43,12 +53,22 @@ export const storageUtils = {
 
   // Balance History
   getBalanceHistory(): BalanceHistory[] {
-    const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
-    return data ? JSON.parse(data) : [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Error loading balance history:', error);
+      return [];
+    }
   },
 
   saveBalanceHistory(history: BalanceHistory[]): void {
-    localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history));
+    try {
+      localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history));
+      console.log('Balance history saved successfully');
+    } catch (error) {
+      console.error('Error saving balance history:', error);
+    }
   },
 
   addBalanceEntry(entry: BalanceHistory): void {
@@ -59,12 +79,22 @@ export const storageUtils = {
 
   // Goals
   getGoals(): Goal[] {
-    const data = localStorage.getItem(STORAGE_KEYS.GOALS);
-    return data ? JSON.parse(data) : [];
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.GOALS);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Error loading goals:', error);
+      return [];
+    }
   },
 
   saveGoals(goals: Goal[]): void {
-    localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
+    try {
+      localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
+      console.log('Goals saved successfully');
+    } catch (error) {
+      console.error('Error saving goals:', error);
+    }
   },
 
   addGoal(goal: Goal): void {
@@ -89,22 +119,41 @@ export const storageUtils = {
 
   // Settings
   getSettings(): UserSettings {
-    const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-    return data ? JSON.parse(data) : {
-      currency: 'USD',
-      currencySymbol: '$',
-      locale: 'en-US'
-    };
+    try {
+      const data = localStorage.getItem(STORAGE_KEYS.SETTINGS);
+      return data ? JSON.parse(data) : {
+        currency: 'USD',
+        currencySymbol: '$',
+        locale: 'en-US'
+      };
+    } catch (error) {
+      console.error('Error loading settings:', error);
+      return {
+        currency: 'USD',
+        currencySymbol: '$',
+        locale: 'en-US'
+      };
+    }
   },
 
   saveSettings(settings: UserSettings): void {
-    localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+    try {
+      localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      console.log('Settings saved successfully');
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
   },
 
   // Utility
   clearAllData(): void {
-    Object.values(STORAGE_KEYS).forEach(key => {
-      localStorage.removeItem(key);
-    });
+    try {
+      Object.values(STORAGE_KEYS).forEach(key => {
+        localStorage.removeItem(key);
+      });
+      console.log('All data cleared successfully');
+    } catch (error) {
+      console.error('Error clearing data:', error);
+    }
   }
 };

@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { Plus, Pencil, Trash2, Building2, Car, CreditCard, Home } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Account } from '@/types/finance';
 import { formatCurrency, getAccountTypeLabel } from '@/utils/calculations';
 import { AddAccountDialog } from './AddAccountDialog';
+import { EditAccountDialog } from './EditAccountDialog';
 
 interface AccountsListProps {
   accounts: Account[];
@@ -17,6 +17,8 @@ interface AccountsListProps {
 
 export const AccountsList = ({ accounts, onAccountAdded, onAccountUpdated, onAccountDeleted }: AccountsListProps) => {
   const [showAddDialog, setShowAddDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
   const getAccountIcon = (type: string) => {
     switch (type) {
@@ -31,6 +33,11 @@ export const AccountsList = ({ accounts, onAccountAdded, onAccountUpdated, onAcc
       default:
         return <Building2 className="h-5 w-5" />;
     }
+  };
+
+  const handleEditAccount = (account: Account) => {
+    setEditingAccount(account);
+    setShowEditDialog(true);
   };
 
   const assets = accounts.filter(acc => acc.isAsset);
@@ -74,7 +81,12 @@ export const AccountsList = ({ accounts, onAccountAdded, onAccountUpdated, onAcc
                       {formatCurrency(account.balance)}
                     </div>
                     <div className="flex space-x-1">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleEditAccount(account)}
+                      >
                         <Pencil className="h-3 w-3" />
                       </Button>
                       <Button 
@@ -120,7 +132,12 @@ export const AccountsList = ({ accounts, onAccountAdded, onAccountUpdated, onAcc
                       {formatCurrency(account.balance)}
                     </div>
                     <div className="flex space-x-1">
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleEditAccount(account)}
+                      >
                         <Pencil className="h-3 w-3" />
                       </Button>
                       <Button 
@@ -146,6 +163,17 @@ export const AccountsList = ({ accounts, onAccountAdded, onAccountUpdated, onAcc
         onAccountAdded={() => {
           onAccountAdded();
           setShowAddDialog(false);
+        }}
+      />
+
+      <EditAccountDialog
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        account={editingAccount}
+        onAccountUpdated={() => {
+          onAccountUpdated();
+          setShowEditDialog(false);
+          setEditingAccount(null);
         }}
       />
     </div>

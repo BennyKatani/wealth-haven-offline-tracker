@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,11 +8,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Goal, GoalCategory } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
+import { calculateNetWorth } from '@/utils/calculations';
 
-interface AddGoalDialogProps {
+interface EditGoalDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onGoalAdded: () => void;
+  goal: Goal | null;
+  onGoalUpdated: () => void;
   currentNetWorth: number;
 }
 
@@ -25,7 +27,7 @@ const goalCategories: { value: GoalCategory; label: string }[] = [
   { value: 'other', label: 'Other' },
 ];
 
-export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth }: AddGoalDialogProps) => {
+export const EditGoalDialog = ({ open, onOpenChange, goal, onGoalUpdated, currentNetWorth }: EditGoalDialogProps) => {
   const [formData, setFormData] = useState({
     name: '',
     targetAmount: '',
@@ -36,53 +38,56 @@ export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth
     useNetWorth: false,
   });
 
+  useEffect(() => {
+    if (goal) {
+      setFormData({
+        name: goal.name,
+        targetAmount: goal.targetAmount.toString(),
+        currentAmount: goal.currentAmount.toString(),
+        targetDate: goal.targetDate,
+        category: goal.category,
+        description: goal.description || '',
+        useNetWorth: false,
+      });
+    }
+  }, [goal]);
+
   const handleUseNetWorthChange = (checked: boolean) => {
     setFormData(prev => ({
       ...prev,
       useNetWorth: checked,
-      currentAmount: checked ? currentNetWorth.toString() : '',
+      currentAmount: checked ? currentNetWorth.toString() : prev.currentAmount,
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.targetAmount || !formData.targetDate || !formData.category) {
+    if (!formData.name || !formData.targetAmount || !formData.targetDate || !formData.category || !goal) {
       return;
     }
 
-    const newGoal: Goal = {
-      id: crypto.randomUUID(),
+    const updates = {
       name: formData.name,
       targetAmount: parseFloat(formData.targetAmount),
       currentAmount: parseFloat(formData.currentAmount) || 0,
       targetDate: formData.targetDate,
       category: formData.category,
       description: formData.description,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
     };
 
-    storageUtils.addGoal(newGoal);
-    onGoalAdded();
-    
-    // Reset form
-    setFormData({
-      name: '',
-      targetAmount: '',
-      currentAmount: '',
-      targetDate: '',
-      category: '' as GoalCategory,
-      description: '',
-      useNetWorth: false,
-    });
+    storageUtils.updateGoal(goal.id, updates);
+    onGoalUpdated();
+    onOpenChange(false);
   };
+
+  if (!goal) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add Financial Goal</DialogTitle>
+          <DialogTitle>Edit Financial Goal</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -177,7 +182,7 @@ export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit">Add Goal</Button>
+            <Button type="submit">Save Changes</Button>
           </div>
         </form>
       </DialogContent>

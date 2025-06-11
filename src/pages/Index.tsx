@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Account, Goal, UserSettings } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
@@ -9,7 +10,7 @@ import { PrivacyBanner } from '@/components/PrivacyBanner';
 import { AddAccountDialog } from '@/components/AddAccountDialog';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { Button } from '@/components/ui/button';
-import { Plus, Settings } from 'lucide-react';
+import { Plus, DollarSign } from 'lucide-react';
 
 const Index = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -94,11 +95,38 @@ const Index = () => {
             onClick={() => setShowSettingsDialog(true)}
             className="ml-4"
           >
-            <Settings className="h-4 w-4" />
+            <DollarSign className="h-4 w-4" />
           </Button>
         </div>
 
         <PrivacyBanner />
+
+        {/* Key Features Section - Always shown */}
+        <div className="mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-100 text-center">
+              <div className="text-4xl mb-3">🔒</div>
+              <h3 className="font-bold text-success mb-2">100% Private</h3>
+              <p className="text-sm text-muted-foreground">
+                Data never leaves your device
+              </p>
+            </div>
+            <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100 text-center">
+              <div className="text-4xl mb-3">💰</div>
+              <h3 className="font-bold text-primary mb-2">100% Free</h3>
+              <p className="text-sm text-muted-foreground">
+                Free to use, forever!
+              </p>
+            </div>
+            <div className="p-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100 text-center">
+              <div className="text-4xl mb-3">⚡</div>
+              <h3 className="font-bold text-purple-600 mb-2">100% Offline</h3>
+              <p className="text-sm text-muted-foreground">
+                No strings attached
+              </p>
+            </div>
+          </div>
+        </div>
 
         {hasData ? (
           <div className="space-y-12">
@@ -115,6 +143,7 @@ const Index = () => {
             <GoalsSection 
               goals={goals}
               onGoalAdded={handleGoalAdded}
+              currentNetWorth={summary.netWorth}
             />
           </div>
         ) : (
@@ -133,7 +162,7 @@ const Index = () => {
                 className="mb-8 text-lg px-8 py-6 h-auto bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all duration-200"
               >
                 <Plus className="h-6 w-6 mr-3" />
-                Add Your First Account
+                Start Tracking
               </Button>
 
               <div className="space-y-4">
