@@ -10,7 +10,7 @@ import { PrivacyBanner } from '@/components/PrivacyBanner';
 import { AddAccountDialog } from '@/components/AddAccountDialog';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { Button } from '@/components/ui/button';
-import { Plus, DollarSign } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 const Index = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -65,6 +65,11 @@ const Index = () => {
   const summary = calculateNetWorth(accounts);
   const hasData = accounts.length > 0;
 
+  // Get currency symbol for display
+  const getCurrencySymbol = () => {
+    return settings.currencySymbol || '$';
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -79,7 +84,7 @@ const Index = () => {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
+        {/* Header - Always shown */}
         <div className="flex justify-between items-start mb-8">
           <div className="text-center flex-1">
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
@@ -93,9 +98,9 @@ const Index = () => {
             variant="outline"
             size="icon"
             onClick={() => setShowSettingsDialog(true)}
-            className="ml-4"
+            className="ml-4 text-xl font-semibold"
           >
-            <DollarSign className="h-4 w-4" />
+            {getCurrencySymbol()}
           </Button>
         </div>
 
@@ -128,7 +133,9 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Conditional Content: Onboarding OR Dashboard */}
         {hasData ? (
+          // Dashboard for existing users
           <div className="space-y-12">
             <NetWorthSummary 
               summary={summary} 
@@ -147,6 +154,7 @@ const Index = () => {
             />
           </div>
         ) : (
+          // Onboarding for new users
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
@@ -186,19 +194,6 @@ const Index = () => {
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Floating Action Button - shown when there are accounts */}
-        {hasData && (
-          <div className="fixed bottom-6 right-6">
-            <Button 
-              onClick={() => setShowAddDialog(true)}
-              className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90"
-              size="icon"
-            >
-              <Plus className="h-6 w-6" />
-            </Button>
           </div>
         )}
 
