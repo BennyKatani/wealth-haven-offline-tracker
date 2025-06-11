@@ -133,28 +133,9 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Conditional Content: Onboarding OR Dashboard */}
-        {hasData ? (
-          // Dashboard for existing users
-          <div className="space-y-12">
-            <NetWorthSummary 
-              summary={summary} 
-              key={`${settings.currency}-${settings.currencySymbol}`}
-            />
-            <AccountsList
-              accounts={accounts}
-              onAccountAdded={handleAccountAdded}
-              onAccountUpdated={handleAccountUpdated}
-              onAccountDeleted={handleAccountDeleted}
-            />
-            <GoalsSection 
-              goals={goals}
-              onGoalAdded={handleGoalAdded}
-              currentNetWorth={summary.netWorth}
-            />
-          </div>
-        ) : (
-          // Onboarding for new users
+        {/* Adaptive Content: Show onboarding for new users OR dashboard for existing users */}
+        {!hasData ? (
+          // Onboarding content for new users - shown after key features
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
               <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
@@ -194,6 +175,25 @@ const Index = () => {
                 </div>
               </div>
             </div>
+          </div>
+        ) : (
+          // Dashboard content for existing users - shown after key features
+          <div className="space-y-12">
+            <NetWorthSummary 
+              summary={summary} 
+              key={`${settings.currency}-${settings.currencySymbol}`}
+            />
+            <AccountsList
+              accounts={accounts}
+              onAccountAdded={handleAccountAdded}
+              onAccountUpdated={handleAccountUpdated}
+              onAccountDeleted={handleAccountDeleted}
+            />
+            <GoalsSection 
+              goals={goals}
+              onGoalAdded={handleGoalAdded}
+              currentNetWorth={summary.netWorth}
+            />
           </div>
         )}
 
