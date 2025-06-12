@@ -6,10 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Goal, GoalCategory } from '@/types/finance';
-import { generateId, formatCurrency } from '@/utils/calculations';
+import { Checkbox } from '@/components/ui/checkbox';
 import { storageUtils } from '@/utils/storage';
+import { generateId } from '@/utils/calculations';
+import { formatCurrency } from '@/utils/calculations';
 
 interface AddGoalDialogProps {
   open: boolean;
@@ -18,25 +18,25 @@ interface AddGoalDialogProps {
   currentNetWorth: number;
 }
 
-const goalCategories: { value: GoalCategory; label: string }[] = [
-  { value: 'retirement', label: 'Retirement' },
-  { value: 'emergency_fund', label: 'Emergency Fund' },
-  { value: 'house', label: 'House/Property' },
-  { value: 'vacation', label: 'Vacation' },
-  { value: 'debt_payoff', label: 'Debt Payoff' },
-  { value: 'other', label: 'Other' },
-];
-
 export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth }: AddGoalDialogProps) => {
   const [formData, setFormData] = useState({
     name: '',
     targetAmount: '',
     currentAmount: '',
     targetDate: '',
-    category: '' as GoalCategory,
+    category: '',
     description: '',
   });
   const [useNetWorth, setUseNetWorth] = useState(false);
+
+  const goalCategories = [
+    { value: 'retirement', label: 'Retirement' },
+    { value: 'emergency_fund', label: 'Emergency Fund' },
+    { value: 'house', label: 'House/Property' },
+    { value: 'vacation', label: 'Vacation' },
+    { value: 'debt_payoff', label: 'Debt Payoff' },
+    { value: 'other', label: 'Other' },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,37 +47,36 @@ export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth
 
     const currentAmount = useNetWorth ? currentNetWorth : parseFloat(formData.currentAmount) || 0;
 
-    const goal: Goal = {
+    const goal = {
       id: generateId(),
       name: formData.name,
       targetAmount: parseFloat(formData.targetAmount),
       currentAmount: currentAmount,
       targetDate: formData.targetDate,
-      category: formData.category,
+      category: formData.category as any,
       description: formData.description,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
 
     storageUtils.addGoal(goal);
-    storageUtils.saveGoals(storageUtils.getGoals()); // Auto-save
     onGoalAdded();
     
-    // Reset form
     setFormData({
       name: '',
       targetAmount: '',
       currentAmount: '',
       targetDate: '',
-      category: '' as GoalCategory,
+      category: '',
       description: '',
     });
     setUseNetWorth(false);
+    onOpenChange(false);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add New Goal</DialogTitle>
         </DialogHeader>
@@ -87,7 +86,6 @@ export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth
             <Label htmlFor="name">Goal Name</Label>
             <Input
               id="name"
-              type="text"
               placeholder="e.g., Emergency Fund, Retirement"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -97,7 +95,7 @@ export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth
 
           <div>
             <Label htmlFor="category">Category</Label>
-            <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value as GoalCategory }))}>
+            <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
               <SelectTrigger>
                 <SelectValue placeholder="Select category" />
               </SelectTrigger>
@@ -125,27 +123,21 @@ export const AddGoalDialog = ({ open, onOpenChange, onGoalAdded, currentNetWorth
           </div>
 
           <div>
-            <Label htmlFor="currentAmount">Starting Amount</Label>
+            <Label>Starting Amount</Label>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <Switch
-                  checked={useNetWorth}
-                  onCheckedChange={setUseNetWorth}
+              <div className="flex items-center space-x-3 p-3 rounded-lg border">
+                <Checkbox
                   id="use-net-worth"
+                  checked={useNetWorth}
+                  onCheckedChange={(checked) => setUseNetWorth(checked as boolean)}
                 />
-                <div className="flex-1">
-                  <Label htmlFor="use-net-worth" className="text-sm font-medium cursor-pointer">
-                    Use Current Net Worth
-                  </Label>
-                  <p className="text-xs text-muted-foreground">
-                    Set starting amount to your total net worth ({formatCurrency(currentNetWorth)})
-                  </p>
-                </div>
+                <Label htmlFor="use-net-worth" className="text-sm font-medium cursor-pointer">
+                  Use Current Net Worth ({formatCurrency(currentNetWorth)})
+                </Label>
               </div>
               
               {!useNetWorth && (
                 <Input
-                  id="currentAmount"
                   type="number"
                   step="0.01"
                   placeholder="0"
