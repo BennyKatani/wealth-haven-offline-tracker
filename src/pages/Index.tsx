@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Account, Goal, UserSettings } from '@/types/finance';
 import { storageUtils as originalStorageUtils } from '@/utils/storage';
@@ -8,6 +9,7 @@ import { AccountsList } from '@/components/AccountsList';
 import { GoalsSection } from '@/components/GoalsSection';
 import { PrivacyBanner } from '@/components/PrivacyBanner';
 import { AddAccountDialog } from '@/components/AddAccountDialog';
+import { AddGoalDialog } from '@/components/AddGoalDialog';
 import { SettingsDialog } from '@/components/SettingsDialog';
 import { OnboardingSection } from '@/components/OnboardingSection';
 import { AccountsGrid } from '@/components/AccountsGrid';
