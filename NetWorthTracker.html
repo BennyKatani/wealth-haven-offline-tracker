@@ -10,124 +10,65 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Embedded Tailwind Configuration and Custom Styles */
+        /* Soothing Color Palette - Single Light Mode */
         :root {
-            --background: 0 0% 100%;
-            --foreground: 222.2 84% 4.9%;
-            --card: 0 0% 100%;
-            --card-foreground: 222.2 84% 4.9%;
-            --popover: 0 0% 100%;
-            --popover-foreground: 222.2 84% 4.9%;
-            --primary: 210 100% 50%;
-            --primary-foreground: 210 40% 98%;
-            --secondary: 210 40% 96.1%;
-            --secondary-foreground: 222.2 47.4% 11.2%;
-            --muted: 210 40% 96.1%;
-            --muted-foreground: 215.4 16.3% 46.9%;
-            --accent: 210 40% 96.1%;
-            --accent-foreground: 222.2 47.4% 11.2%;
-            --destructive: 0 84.2% 60.2%;
-            --destructive-foreground: 210 40% 98%;
-            --border: 214.3 31.8% 91.4%;
-            --input: 214.3 31.8% 91.4%;
-            --ring: 222.2 84% 4.9%;
+            --background: 218 23% 11%;
+            --foreground: 218 8% 95%;
+            --card: 222 16% 14%;
+            --card-foreground: 218 8% 95%;
+            --popover: 222 16% 14%;
+            --popover-foreground: 218 8% 95%;
+            --primary: 210 70% 65%;
+            --primary-foreground: 222 16% 14%;
+            --secondary: 218 16% 20%;
+            --secondary-foreground: 218 8% 88%;
+            --muted: 218 16% 20%;
+            --muted-foreground: 218 8% 65%;
+            --accent: 218 16% 20%;
+            --accent-foreground: 218 8% 88%;
+            --destructive: 0 60% 55%;
+            --destructive-foreground: 0 0% 98%;
+            --border: 218 16% 25%;
+            --input: 218 16% 25%;
+            --ring: 210 70% 65%;
             --radius: 0.5rem;
-            --success: 142 76% 36%;
-            --success-foreground: 355 7% 97%;
-            --warning: 38 92% 50%;
-            --warning-foreground: 48 96% 89%;
-            --profit: 142 69% 58%;
-            --loss: 0 84% 60%;
-            --neutral: 215 28% 17%;
-        }
-
-        .dark {
-            --background: 222.2 84% 4.9%;
-            --foreground: 210 40% 98%;
-            --card: 222.2 84% 4.9%;
-            --card-foreground: 210 40% 98%;
-            --popover: 222.2 84% 4.9%;
-            --popover-foreground: 210 40% 98%;
-            --primary: 217.2 91.2% 59.8%;
-            --primary-foreground: 222.2 47.4% 11.2%;
-            --secondary: 217.2 32.6% 17.5%;
-            --secondary-foreground: 210 40% 98%;
-            --muted: 217.2 32.6% 17.5%;
-            --muted-foreground: 215 20.2% 65.1%;
-            --accent: 217.2 32.6% 17.5%;
-            --accent-foreground: 210 40% 98%;
-            --destructive: 0 62.8% 30.6%;
-            --destructive-foreground: 210 40% 98%;
-            --border: 217.2 32.6% 17.5%;
-            --input: 217.2 32.6% 17.5%;
-            --ring: 212.7 26.8% 83.9%;
-            --success: 142 76% 46%;
-            --success-foreground: 355 7% 97%;
-            --warning: 38 92% 60%;
-            --warning-foreground: 48 96% 89%;
-            --profit: 142 69% 68%;
-            --loss: 0 84% 70%;
-            --neutral: 215 28% 77%;
+            --success: 142 50% 55%;
+            --success-foreground: 142 20% 15%;
+            --warning: 38 80% 60%;
+            --warning-foreground: 38 40% 15%;
+            --profit: 142 55% 60%;
+            --loss: 0 60% 55%;
+            --neutral: 218 8% 65%;
         }
 
         body {
             min-height: 100vh;
-            background: hsl(var(--background));
+            background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(222 23% 8%) 100%);
             color: hsl(var(--foreground));
-        }
-
-        body.dark {
-            background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(222.2 84% 3.9%) 100%);
-        }
-
-        body:not(.dark) {
-            background: linear-gradient(135deg, rgba(248, 250, 252, 1) 0%, rgba(239, 246, 255, 1) 100%);
-        }
-
-        .gradient-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
-        }
-
-        .dark .gradient-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.1) 100%);
-        }
-
-        .gradient-success {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-        }
-
-        .dark .gradient-success {
-            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(59, 130, 246, 0.15) 100%);
-        }
-
-        .gradient-warning {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(239, 68, 68, 0.1) 100%);
-        }
-
-        .dark .gradient-warning {
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(239, 68, 68, 0.15) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
 
         /* Component Styles */
         .card {
             background-color: hsl(var(--card));
             color: hsl(var(--card-foreground));
-            border-radius: calc(var(--radius) - 2px);
+            border-radius: calc(var(--radius));
             border: 1px solid hsl(var(--border));
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            border-radius: calc(var(--radius) - 2px);
+            border-radius: calc(var(--radius));
             font-size: 0.875rem;
             font-weight: 500;
             transition: all 0.2s;
             cursor: pointer;
             border: none;
             padding: 0.5rem 1rem;
+            min-height: 2.5rem;
         }
 
         .btn-primary {
@@ -137,6 +78,7 @@
 
         .btn-primary:hover {
             background-color: hsl(var(--primary) / 0.9);
+            transform: translateY(-1px);
         }
 
         .btn-outline {
@@ -152,19 +94,25 @@
 
         .input {
             display: flex;
-            height: 2.25rem;
+            height: 2.5rem;
             width: 100%;
-            border-radius: calc(var(--radius) - 2px);
+            border-radius: calc(var(--radius));
             border: 1px solid hsl(var(--input));
-            background-color: transparent;
+            background-color: hsl(var(--card));
             padding: 0.5rem 0.75rem;
             font-size: 0.875rem;
             color: hsl(var(--foreground));
+            transition: border-color 0.2s;
         }
 
         .input:focus {
             outline: 2px solid hsl(var(--ring));
             outline-offset: 2px;
+            border-color: hsl(var(--primary));
+        }
+
+        .input::placeholder {
+            color: hsl(var(--muted-foreground));
         }
 
         .modal {
@@ -175,20 +123,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
 
         .modal-content {
-            background-color: hsl(var(--background));
+            background-color: hsl(var(--card));
             padding: 1.5rem;
-            border-radius: calc(var(--radius));
+            border-radius: calc(var(--radius) * 1.5);
             max-width: 28rem;
-            width: 90%;
+            width: 100%;
             max-height: 90vh;
             overflow-y: auto;
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
         .progress {
-            height: 0.5rem;
+            height: 0.75rem;
             width: 100%;
             overflow: hidden;
             border-radius: 9999px;
@@ -197,42 +148,25 @@
 
         .progress-bar {
             height: 100%;
-            background-color: hsl(var(--primary));
+            background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--success)));
             transition: width 0.3s ease;
-        }
-
-        .toggle {
-            position: relative;
-            display: inline-flex;
-            height: 1.5rem;
-            width: 2.75rem;
-            cursor: pointer;
             border-radius: 9999px;
-            border: 2px solid transparent;
-            transition: all 0.2s;
         }
 
-        .toggle.active {
-            background-color: hsl(var(--primary));
+        /* Gradient backgrounds for cards */
+        .gradient-card {
+            background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(222 20% 16%) 100%);
+            border: 1px solid hsl(var(--border));
         }
 
-        .toggle:not(.active) {
-            background-color: hsl(var(--input));
+        .gradient-success {
+            background: linear-gradient(135deg, hsl(142 30% 18%) 0%, hsl(var(--card)) 100%);
+            border: 1px solid hsl(142 30% 25%);
         }
 
-        .toggle-thumb {
-            pointer-events: none;
-            display: block;
-            height: 1.25rem;
-            width: 1.25rem;
-            border-radius: 9999px;
-            background-color: hsl(var(--background));
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
-        }
-
-        .toggle.active .toggle-thumb {
-            transform: translateX(1.25rem);
+        .gradient-warning {
+            background: linear-gradient(135deg, hsl(38 40% 18%) 0%, hsl(var(--card)) 100%);
+            border: 1px solid hsl(38 40% 25%);
         }
 
         /* Icons */
@@ -240,15 +174,46 @@
             display: inline-block;
             width: 1rem;
             height: 1rem;
-            fill: currentColor;
+            fill: none;
             stroke: currentColor;
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
 
+        .icon-lg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
         .hidden {
             display: none !important;
+        }
+
+        /* Privacy banner */
+        .privacy-banner {
+            background: linear-gradient(135deg, hsl(142 30% 18%) 0%, hsl(142 40% 20%) 100%);
+            border: 1px solid hsl(142 30% 25%);
+        }
+
+        /* Text gradients */
+        .gradient-text {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--success)));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .modal-content {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            
+            .btn {
+                padding: 0.75rem 1rem;
+            }
         }
     </style>
 </head>
@@ -256,14 +221,13 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect } = React;
 
         // Storage utilities
         const STORAGE_KEYS = {
             ACCOUNTS: 'networth_accounts',
             GOALS: 'networth_goals',
-            SETTINGS: 'networth_settings',
-            DARK_MODE: 'networth_dark_mode'
+            SETTINGS: 'networth_settings'
         };
 
         const storageUtils = {
@@ -280,7 +244,6 @@
             saveAccounts(accounts) {
                 try {
                     localStorage.setItem(STORAGE_KEYS.ACCOUNTS, JSON.stringify(accounts));
-                    console.log('Accounts saved successfully');
                 } catch (error) {
                     console.error('Error saving accounts:', error);
                 }
@@ -319,7 +282,6 @@
             saveGoals(goals) {
                 try {
                     localStorage.setItem(STORAGE_KEYS.GOALS, JSON.stringify(goals));
-                    console.log('Goals saved successfully');
                 } catch (error) {
                     console.error('Error saving goals:', error);
                 }
@@ -366,26 +328,8 @@
             saveSettings(settings) {
                 try {
                     localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
-                    console.log('Settings saved successfully');
                 } catch (error) {
                     console.error('Error saving settings:', error);
-                }
-            },
-
-            getDarkMode() {
-                try {
-                    const data = localStorage.getItem(STORAGE_KEYS.DARK_MODE);
-                    return data ? JSON.parse(data) : false;
-                } catch (error) {
-                    return false;
-                }
-            },
-
-            saveDarkMode(darkMode) {
-                try {
-                    localStorage.setItem(STORAGE_KEYS.DARK_MODE, JSON.stringify(darkMode));
-                } catch (error) {
-                    console.error('Error saving dark mode:', error);
                 }
             }
         };
@@ -462,19 +406,6 @@
         const PlusIcon = () => (
             <svg className="icon" fill="none" viewBox="0 0 24 24">
                 <path d="M12 5v14m-7-7h14" />
-            </svg>
-        );
-
-        const MoonIcon = () => (
-            <svg className="icon" fill="none" viewBox="0 0 24 24">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-        );
-
-        const SunIcon = () => (
-            <svg className="icon" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="5"/>
-                <path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
             </svg>
         );
 
@@ -576,11 +507,11 @@
 
             return (
                 <Modal isOpen={isOpen} onClose={onClose}>
-                    <h2 className="text-xl font-bold mb-4">Add New Account</h2>
+                    <h2 className="text-xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Add New Account</h2>
                     
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium mb-2">Account Type</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Account Type</label>
                             <div className="flex space-x-2 mb-2">
                                 <button
                                     type="button"
@@ -613,7 +544,7 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Account Name</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Account Name</label>
                             <input
                                 className="input"
                                 type="text"
@@ -625,7 +556,7 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Current Balance</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Current Balance</label>
                             <input
                                 className="input"
                                 type="number"
@@ -709,11 +640,11 @@
 
             return (
                 <Modal isOpen={isOpen} onClose={onClose}>
-                    <h2 className="text-xl font-bold mb-4">Add New Goal</h2>
+                    <h2 className="text-xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Add New Goal</h2>
                     
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium mb-2">Goal Name</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Goal Name</label>
                             <input
                                 className="input"
                                 type="text"
@@ -725,7 +656,7 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Category</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Category</label>
                             <select
                                 className="input"
                                 value={formData.category}
@@ -742,7 +673,7 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Target Amount</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Target Amount</label>
                             <input
                                 className="input"
                                 type="number"
@@ -755,16 +686,16 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Starting Amount</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Starting Amount</label>
                             <div className="space-y-3">
-                                <div className="flex items-center space-x-3 p-3 rounded-lg border">
+                                <div className="flex items-center space-x-3 p-3 rounded-lg border" style={{ borderColor: 'hsl(var(--border))' }}>
                                     <input
                                         type="checkbox"
                                         checked={useNetWorth}
                                         onChange={(e) => setUseNetWorth(e.target.checked)}
                                         id="use-net-worth"
                                     />
-                                    <label htmlFor="use-net-worth" className="text-sm font-medium cursor-pointer">
+                                    <label htmlFor="use-net-worth" className="text-sm font-medium cursor-pointer" style={{ color: 'hsl(var(--foreground))' }}>
                                         Use Current Net Worth ({formatCurrency(currentNetWorth)})
                                     </label>
                                 </div>
@@ -783,7 +714,7 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Target Date</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Target Date</label>
                             <input
                                 className="input"
                                 type="date"
@@ -794,13 +725,14 @@
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium mb-2">Description (Optional)</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Description (Optional)</label>
                             <textarea
                                 className="input"
                                 placeholder="Additional notes about this goal..."
                                 value={formData.description}
                                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                                 rows="3"
+                                style={{ height: 'auto', minHeight: '4rem' }}
                             />
                         </div>
 
@@ -839,11 +771,11 @@
 
             return (
                 <Modal isOpen={isOpen} onClose={onClose}>
-                    <h2 className="text-xl font-bold mb-4">Settings</h2>
+                    <h2 className="text-xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Settings</h2>
                     
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium mb-2">Currency</label>
+                            <label className="block text-sm font-medium mb-2" style={{ color: 'hsl(var(--foreground))' }}>Currency</label>
                             <select
                                 className="input"
                                 value={settings.currency}
@@ -899,7 +831,6 @@
             const [goals, setGoals] = useState([]);
             const [settings, setSettings] = useState(storageUtils.getSettings());
             const [loading, setLoading] = useState(true);
-            const [darkMode, setDarkMode] = useState(storageUtils.getDarkMode());
             
             // Modal states
             const [showAddAccountModal, setShowAddAccountModal] = useState(false);
@@ -909,15 +840,6 @@
             useEffect(() => {
                 loadData();
             }, []);
-
-            useEffect(() => {
-                storageUtils.saveDarkMode(darkMode);
-                if (darkMode) {
-                    document.body.classList.add('dark');
-                } else {
-                    document.body.classList.remove('dark');
-                }
-            }, [darkMode]);
 
             const loadData = () => {
                 setLoading(true);
@@ -976,7 +898,7 @@
                     <div className="min-h-screen flex items-center justify-center">
                         <div className="text-center">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                            <p className="text-gray-600">Loading your financial data...</p>
+                            <p style={{ color: 'hsl(var(--muted-foreground))' }}>Loading your financial data...</p>
                         </div>
                     </div>
                 );
@@ -984,27 +906,18 @@
 
             return (
                 <div className="min-h-screen">
-                    <div className="container mx-auto px-4 py-8 max-w-6xl">
+                    <div className="container mx-auto px-4 py-8 max-w-7xl">
                         {/* Header */}
                         <div className="flex justify-between items-start mb-8">
                             <div className="text-center flex-1">
-                                <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
+                                <h1 className="text-4xl font-bold gradient-text mb-4">
                                     Net Worth Tracker
                                 </h1>
-                                <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                                <p className="text-lg max-w-2xl mx-auto" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                     Track your financial progress with complete privacy. All data stays on your device.
                                 </p>
                             </div>
                             <div className="flex items-center gap-2 ml-4">
-                                <button
-                                    className={`toggle ${darkMode ? 'active' : ''}`}
-                                    onClick={() => setDarkMode(!darkMode)}
-                                    title="Toggle dark mode"
-                                >
-                                    <span className="toggle-thumb">
-                                        {darkMode ? <SunIcon /> : <MoonIcon />}
-                                    </span>
-                                </button>
                                 <button
                                     className="btn btn-outline"
                                     onClick={() => setShowSettingsModal(true)}
@@ -1016,10 +929,10 @@
                         </div>
 
                         {/* Privacy Banner */}
-                        <div className="mb-8 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <div className="mb-8 p-4 privacy-banner rounded-lg">
                             <div className="flex items-center justify-center space-x-2">
                                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <span className="text-green-800 dark:text-green-200 font-medium">
+                                <span className="font-medium" style={{ color: 'hsl(var(--success-foreground))' }}>
                                     🔒 All your data is stored locally on your device - completely private and secure
                                 </span>
                             </div>
@@ -1030,17 +943,17 @@
                             // Onboarding for new users
                             <div className="text-center py-16">
                                 <div className="max-w-md mx-auto">
-                                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
+                                    <div className="gradient-card rounded-full w-24 h-24 flex items-center justify-center mx-auto mb-6">
                                         <span className="text-4xl">📊</span>
                                     </div>
-                                    <h2 className="text-2xl font-bold mb-4">Welcome to Your Financial Journey</h2>
-                                    <p className="text-gray-600 dark:text-gray-400 mb-8">
+                                    <h2 className="text-2xl font-bold mb-4" style={{ color: 'hsl(var(--foreground))' }}>Welcome to Your Financial Journey</h2>
+                                    <p className="mb-8" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                         Start by adding your first account to begin tracking your net worth and financial goals.
                                     </p>
                                     
                                     <button 
                                         onClick={() => setShowAddAccountModal(true)}
-                                        className="btn btn-primary mb-8 text-lg px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+                                        className="btn btn-primary mb-8 text-lg px-8 py-6 shadow-lg transform hover:scale-105 transition-all duration-200"
                                         style={{ height: 'auto' }}
                                     >
                                         <PlusIcon />
@@ -1048,21 +961,21 @@
                                     </button>
 
                                     <div className="space-y-4">
-                                        <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-lg border border-green-100 dark:border-green-800">
-                                            <h3 className="font-semibold text-green-700 dark:text-green-400 mb-2">Step 1: Add Your Accounts</h3>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <div className="p-4 gradient-success rounded-lg">
+                                            <h3 className="font-semibold mb-2" style={{ color: 'hsl(var(--success))' }}>Step 1: Add Your Accounts</h3>
+                                            <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                 Add your bank accounts, investments, properties, and debts to get a complete picture.
                                             </p>
                                         </div>
-                                        <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
-                                            <h3 className="font-semibold text-blue-700 dark:text-blue-400 mb-2">Step 2: Set Your Goals</h3>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <div className="p-4 gradient-card rounded-lg">
+                                            <h3 className="font-semibold mb-2" style={{ color: 'hsl(var(--primary))' }}>Step 2: Set Your Goals</h3>
+                                            <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                 Define your financial targets and track your progress over time.
                                             </p>
                                         </div>
-                                        <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-100 dark:border-purple-800">
-                                            <h3 className="font-semibold text-purple-700 dark:text-purple-400 mb-2">Step 3: Track Progress</h3>
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <div className="p-4 gradient-warning rounded-lg">
+                                            <h3 className="font-semibold mb-2" style={{ color: 'hsl(var(--warning))' }}>Step 3: Track Progress</h3>
+                                            <p className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                 Update your balances regularly and watch your net worth grow.
                                             </p>
                                         </div>
@@ -1076,14 +989,14 @@
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                                     <div className="md:col-span-2 card gradient-card">
                                         <div className="p-6">
-                                            <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-3">Total Net Worth</h3>
+                                            <h3 className="text-lg font-medium mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Total Net Worth</h3>
                                             <div className="flex items-center space-x-3">
                                                 <TargetIcon />
                                                 <div>
-                                                    <div className="text-4xl font-bold">
+                                                    <div className="text-4xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>
                                                         {formatCurrency(summary.netWorth)}
                                                     </div>
-                                                    <div className="flex items-center space-x-1 text-sm text-green-600 dark:text-green-400">
+                                                    <div className="flex items-center space-x-1 text-sm" style={{ color: 'hsl(var(--success))' }}>
                                                         <TrendingUpIcon />
                                                         <span>Track your progress over time</span>
                                                     </div>
@@ -1094,8 +1007,8 @@
 
                                     <div className="card gradient-success">
                                         <div className="p-6">
-                                            <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-3">Total Assets</h3>
-                                            <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                                            <h3 className="text-lg font-medium mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Total Assets</h3>
+                                            <div className="text-2xl font-bold" style={{ color: 'hsl(var(--success))' }}>
                                                 {formatCurrency(summary.totalAssets)}
                                             </div>
                                         </div>
@@ -1103,8 +1016,8 @@
 
                                     <div className="card gradient-warning">
                                         <div className="p-6">
-                                            <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-3">Total Liabilities</h3>
-                                            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">
+                                            <h3 className="text-lg font-medium mb-3" style={{ color: 'hsl(var(--muted-foreground))' }}>Total Liabilities</h3>
+                                            <div className="text-2xl font-bold" style={{ color: 'hsl(var(--warning))' }}>
                                                 {formatCurrency(summary.totalLiabilities)}
                                             </div>
                                         </div>
@@ -1114,7 +1027,7 @@
                                 {/* Accounts Section */}
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center">
-                                        <h2 className="text-2xl font-bold">Accounts</h2>
+                                        <h2 className="text-2xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>Accounts</h2>
                                         <button onClick={() => setShowAddAccountModal(true)} className="btn btn-primary">
                                             <PlusIcon />
                                             <span className="ml-2">Add Account</span>
@@ -1125,29 +1038,29 @@
                                         {/* Assets */}
                                         <div className="card">
                                             <div className="p-6">
-                                                <h3 className="text-lg font-bold text-green-600 dark:text-green-400 mb-4">Assets</h3>
+                                                <h3 className="text-lg font-bold mb-4" style={{ color: 'hsl(var(--success))' }}>Assets</h3>
                                                 <div className="space-y-3">
                                                     {accounts.filter(acc => acc.isAsset).map((account) => (
-                                                        <div key={account.id} className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border border-green-100 dark:border-green-800">
+                                                        <div key={account.id} className="flex items-center justify-between p-3 rounded-lg gradient-success">
                                                             <div className="flex items-center space-x-3">
-                                                                <div className="text-green-600 dark:text-green-400">
+                                                                <div style={{ color: 'hsl(var(--success))' }}>
                                                                     <BuildingIcon />
                                                                 </div>
                                                                 <div>
-                                                                    <div className="font-medium">{account.name}</div>
-                                                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                                    <div className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{account.name}</div>
+                                                                    <div className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                                         {getAccountTypeLabel(account.type)}
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div className="text-right">
-                                                                <div className="font-semibold text-green-600 dark:text-green-400">
+                                                                <div className="font-semibold" style={{ color: 'hsl(var(--success))' }}>
                                                                     {formatCurrency(account.balance)}
                                                                 </div>
                                                                 <button 
-                                                                    className="btn btn-outline text-red-600 hover:text-red-700 mt-1"
+                                                                    className="btn btn-outline mt-1"
                                                                     onClick={() => handleDeleteAccount(account.id)}
-                                                                    style={{ padding: '0.25rem', fontSize: '0.75rem' }}
+                                                                    style={{ padding: '0.25rem', fontSize: '0.75rem', color: 'hsl(var(--destructive))' }}
                                                                 >
                                                                     <TrashIcon />
                                                                 </button>
@@ -1155,7 +1068,7 @@
                                                         </div>
                                                     ))}
                                                     {accounts.filter(acc => acc.isAsset).length === 0 && (
-                                                        <p className="text-gray-600 dark:text-gray-400 text-center py-4">No assets added yet</p>
+                                                        <p className="text-center py-4" style={{ color: 'hsl(var(--muted-foreground))' }}>No assets added yet</p>
                                                     )}
                                                 </div>
                                             </div>
@@ -1164,29 +1077,29 @@
                                         {/* Liabilities */}
                                         <div className="card">
                                             <div className="p-6">
-                                                <h3 className="text-lg font-bold text-orange-600 dark:text-orange-400 mb-4">Liabilities</h3>
+                                                <h3 className="text-lg font-bold mb-4" style={{ color: 'hsl(var(--warning))' }}>Liabilities</h3>
                                                 <div className="space-y-3">
                                                     {accounts.filter(acc => !acc.isAsset).map((account) => (
-                                                        <div key={account.id} className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-100 dark:border-orange-800">
+                                                        <div key={account.id} className="flex items-center justify-between p-3 rounded-lg gradient-warning">
                                                             <div className="flex items-center space-x-3">
-                                                                <div className="text-orange-600 dark:text-orange-400">
+                                                                <div style={{ color: 'hsl(var(--warning))' }}>
                                                                     <BuildingIcon />
                                                                 </div>
                                                                 <div>
-                                                                    <div className="font-medium">{account.name}</div>
-                                                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                                    <div className="font-medium" style={{ color: 'hsl(var(--foreground))' }}>{account.name}</div>
+                                                                    <div className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                                         {getAccountTypeLabel(account.type)}
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div className="text-right">
-                                                                <div className="font-semibold text-orange-600 dark:text-orange-400">
+                                                                <div className="font-semibold" style={{ color: 'hsl(var(--warning))' }}>
                                                                     {formatCurrency(account.balance)}
                                                                 </div>
                                                                 <button 
-                                                                    className="btn btn-outline text-red-600 hover:text-red-700 mt-1"
+                                                                    className="btn btn-outline mt-1"
                                                                     onClick={() => handleDeleteAccount(account.id)}
-                                                                    style={{ padding: '0.25rem', fontSize: '0.75rem' }}
+                                                                    style={{ padding: '0.25rem', fontSize: '0.75rem', color: 'hsl(var(--destructive))' }}
                                                                 >
                                                                     <TrashIcon />
                                                                 </button>
@@ -1194,7 +1107,7 @@
                                                         </div>
                                                     ))}
                                                     {accounts.filter(acc => !acc.isAsset).length === 0 && (
-                                                        <p className="text-gray-600 dark:text-gray-400 text-center py-4">No liabilities added yet</p>
+                                                        <p className="text-center py-4" style={{ color: 'hsl(var(--muted-foreground))' }}>No liabilities added yet</p>
                                                     )}
                                                 </div>
                                             </div>
@@ -1205,7 +1118,7 @@
                                 {/* Goals Section */}
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center">
-                                        <h2 className="text-2xl font-bold">Financial Goals</h2>
+                                        <h2 className="text-2xl font-bold" style={{ color: 'hsl(var(--foreground))' }}>Financial Goals</h2>
                                         <button onClick={() => setShowAddGoalModal(true)} className="btn btn-outline">
                                             <PlusIcon />
                                             <span className="ml-2">Add Goal</span>
@@ -1216,8 +1129,8 @@
                                         <div className="card">
                                             <div className="p-12 text-center">
                                                 <TargetIcon />
-                                                <h3 className="text-lg font-semibold mb-2">No financial goals yet</h3>
-                                                <p className="text-gray-600 dark:text-gray-400 mb-4">Set your first goal to start tracking your progress</p>
+                                                <h3 className="text-lg font-semibold mb-2" style={{ color: 'hsl(var(--foreground))' }}>No financial goals yet</h3>
+                                                <p className="mb-4" style={{ color: 'hsl(var(--muted-foreground))' }}>Set your first goal to start tracking your progress</p>
                                                 <button onClick={() => setShowAddGoalModal(true)} className="btn btn-primary">
                                                     <PlusIcon />
                                                     <span className="ml-2">Add Your First Goal</span>
@@ -1236,28 +1149,28 @@
                                                             <div className="flex items-center justify-between mb-4">
                                                                 <div className="flex items-center space-x-2">
                                                                     <TargetIcon />
-                                                                    <span className="font-semibold">{goal.name}</span>
+                                                                    <span className="font-semibold" style={{ color: 'hsl(var(--foreground))' }}>{goal.name}</span>
                                                                 </div>
                                                             </div>
                                                             <div className="space-y-4">
                                                                 <div>
                                                                     <div className="flex justify-between items-center mb-2">
-                                                                        <span className="text-sm text-gray-600 dark:text-gray-400">Progress</span>
-                                                                        <span className="text-sm font-medium">{progress.toFixed(1)}%</span>
+                                                                        <span className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>Progress</span>
+                                                                        <span className="text-sm font-medium" style={{ color: 'hsl(var(--foreground))' }}>{progress.toFixed(1)}%</span>
                                                                     </div>
                                                                     <Progress value={progress} className="h-3" />
                                                                     <div className="flex justify-between items-center mt-2 text-sm">
-                                                                        <span className="text-green-600 dark:text-green-400 font-medium">
+                                                                        <span className="font-medium" style={{ color: 'hsl(var(--success))' }}>
                                                                             {formatCurrency(goal.currentAmount)}
                                                                         </span>
-                                                                        <span className="text-gray-600 dark:text-gray-400">
+                                                                        <span style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                                             {formatCurrency(goal.targetAmount)}
                                                                         </span>
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-                                                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                                <div className="pt-2" style={{ borderTop: '1px solid hsl(var(--border))' }}>
+                                                                    <div className="text-sm" style={{ color: 'hsl(var(--muted-foreground))' }}>
                                                                         {timeRemaining} remaining
                                                                     </div>
                                                                 </div>
