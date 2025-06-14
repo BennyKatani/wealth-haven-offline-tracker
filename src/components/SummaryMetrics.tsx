@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NetWorthSummary } from "@/types/finance";
 import { formatCurrency } from "@/utils/calculations";
-import { DollarSign, TrendingUp, TrendingDown } from "lucide-react";
+import { Wallet, TrendingUp, TrendingDown } from "lucide-react";
 
 interface SummaryMetricsProps {
   summary: NetWorthSummary;
@@ -28,7 +28,7 @@ export const SummaryMetrics = ({ summary }: SummaryMetricsProps) => {
       <MetricCard
         title="Net Worth"
         value={formatCurrency(summary.netWorth)}
-        icon={DollarSign}
+        icon={Wallet}
         colorClass="text-primary"
       />
       <MetricCard

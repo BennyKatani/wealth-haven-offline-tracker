@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Account, NetWorthSummary } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
@@ -7,6 +8,7 @@ import { SummaryMetrics } from '@/components/SummaryMetrics';
 import { AccountSection } from '@/components/AccountSection';
 import { AddAccountSheet } from '@/components/AddAccountSheet';
 import { EditAccountDialog } from '@/components/EditAccountDialog';
+import { SettingsDialog } from '@/components/SettingsDialog';
 
 const Index = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -21,6 +23,7 @@ const Index = () => {
   const [isAddAccountSheetOpen, setIsAddAccountSheetOpen] = useState(false);
   const [isEditAccountDialogOpen, setIsEditAccountDialogOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -61,6 +64,10 @@ const Index = () => {
     loadData();
     setIsEditAccountDialogOpen(false);
   };
+  
+  const handleSettingsUpdated = () => {
+    loadData();
+  };
 
   if (loading) {
     return (
@@ -78,7 +85,10 @@ const Index = () => {
       className="min-h-screen p-4 md:p-8"
     >
       <div className="container mx-auto max-w-6xl">
-        <DashboardHeader onAddAccount={() => setIsAddAccountSheetOpen(true)} />
+        <DashboardHeader 
+          onAddAccount={() => setIsAddAccountSheetOpen(true)} 
+          onOpenSettings={() => setIsSettingsDialogOpen(true)}
+        />
         <SummaryMetrics summary={summary} />
         <AccountSection 
           accounts={accounts} 
@@ -96,6 +106,11 @@ const Index = () => {
         onOpenChange={setIsEditAccountDialogOpen}
         account={editingAccount}
         onAccountUpdated={handleAccountUpdated}
+      />
+      <SettingsDialog
+        open={isSettingsDialogOpen}
+        onOpenChange={setIsSettingsDialogOpen}
+        onSettingsUpdated={handleSettingsUpdated}
       />
     </div>
   );
