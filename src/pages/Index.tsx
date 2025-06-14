@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Account, NetWorthSummary } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
@@ -76,8 +75,7 @@ const Index = () => {
 
   return (
     <div 
-      className="min-h-screen bg-cover bg-center p-4 md:p-8"
-      style={{ backgroundImage: "url('/background.png')" }}
+      className="min-h-screen p-4 md:p-8"
     >
       <div className="container mx-auto max-w-6xl">
         <DashboardHeader onAddAccount={() => setIsAddAccountSheetOpen(true)} />
