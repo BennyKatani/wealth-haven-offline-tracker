@@ -1,6 +1,9 @@
 
-import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Account, AccountType } from '@/types/finance';
 import { getAccountCategories } from '@/utils/calculations';
 import { storageUtils } from '@/utils/storage';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 interface EditAccountDialogProps {
   open: boolean;
@@ -17,58 +21,66 @@ interface EditAccountDialogProps {
   onAccountUpdated: () => void;
 }
 
-export const EditAccountDialog = ({ open, onOpenChange, account, onAccountUpdated }: EditAccountDialogProps) => {
-  const [formData, setFormData] = useState({
-    name: '',
-    type: '' as AccountType,
-    balance: '',
-    isAsset: true,
-    category: '',
-  });
+const accountCategories = getAccountCategories();
+const allAccountTypes = [
+  ...accountCategories.assets.map((c) => c.value),
+  ...accountCategories.liabilities.map((c) => c.value),
+] as [AccountType, ...AccountType[]];
 
-  const accountCategories = getAccountCategories();
+const formSchema = z.object({
+  name: z.string().min(1, { message: "Account name is required." }),
+  balance: z.coerce.number({ invalid_type_error: "Please enter a valid number." }).positive({ message: "Balance must be positive." }),
+  isAsset: z.boolean(),
+  type: z.enum(allAccountTypes, {
+    errorMap: () => ({ message: "Please select an account type." }),
+  }),
+});
+
+
+export const EditAccountDialog = ({ open, onOpenChange, account, onAccountUpdated }: EditAccountDialogProps) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      balance: 0,
+      isAsset: true,
+    },
+  });
 
   useEffect(() => {
     if (account) {
-      setFormData({
+      form.reset({
         name: account.name,
-        type: account.type,
-        balance: account.balance.toString(),
+        balance: account.balance,
         isAsset: account.isAsset,
-        category: account.category,
+        type: account.type,
       });
     }
-  }, [account]);
+  }, [account, open, form]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.name || !formData.type || !formData.balance || !account) {
-      return;
-    }
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (!account) return;
 
     const updates = {
-      name: formData.name,
-      type: formData.type,
-      balance: parseFloat(formData.balance),
-      isAsset: formData.isAsset,
-      category: formData.type, // Update category to match type
+      name: values.name,
+      type: values.type,
+      balance: values.balance,
+      isAsset: values.isAsset,
+      category: values.type,
     };
 
     storageUtils.updateAccount(account.id, updates);
     onAccountUpdated();
     onOpenChange(false);
   };
+  
+  const isAsset = form.watch('isAsset');
 
   const handleTabChange = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      isAsset: value === 'assets',
-      type: '' as AccountType,
-    }));
+    const newIsAsset = value === 'assets';
+    form.setValue('isAsset', newIsAsset);
+    form.setValue('type', undefined as any, { shouldValidate: true });
   };
-
-  const categories = formData.isAsset ? accountCategories.assets : accountCategories.liabilities;
 
   if (!account) return null;
 
@@ -77,86 +89,83 @@ export const EditAccountDialog = ({ open, onOpenChange, account, onAccountUpdate
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Account</DialogTitle>
+          <DialogDescription>
+            Make changes to your account here. Click save when you're done.
+          </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Tabs value={formData.isAsset ? 'assets' : 'liabilities'} onValueChange={handleTabChange}>
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="assets">Asset</TabsTrigger>
-              <TabsTrigger value="liabilities">Liability</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="assets" className="space-y-4">
-              <div>
-                <Label htmlFor="asset-type">Account Type</Label>
-                <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as AccountType }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select account type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {accountCategories.assets.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="liabilities" className="space-y-4">
-              <div>
-                <Label htmlFor="liability-type">Account Type</Label>
-                <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value as AccountType }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select account type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {accountCategories.liabilities.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </TabsContent>
-          </Tabs>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <Tabs value={isAsset ? 'assets' : 'liabilities'} onValueChange={handleTabChange} className="pt-2">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="assets">Asset</TabsTrigger>
+                <TabsTrigger value="liabilities">Liability</TabsTrigger>
+              </TabsList>
+              
+              <FormField
+                control={form.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem className="pt-4">
+                    <FormLabel>Account Type</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select account type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {(isAsset ? accountCategories.assets : accountCategories.liabilities).map((category) => (
+                          <SelectItem key={category.value} value={category.value}>
+                            {category.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </Tabs>
 
-          <div>
-            <Label htmlFor="name">Account Name</Label>
-            <Input
-              id="name"
-              type="text"
-              placeholder="e.g., Chase Checking, Vanguard 401k"
-              value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              required
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Account Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., Chase Checking, Vanguard 401k" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          <div>
-            <Label htmlFor="balance">Current Balance</Label>
-            <Input
-              id="balance"
-              type="number"
-              step="0.01"
-              placeholder="0.00"
-              value={formData.balance}
-              onChange={(e) => setFormData(prev => ({ ...prev, balance: e.target.value }))}
-              required
+            <FormField
+              control={form.control}
+              name="balance"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Current Balance</FormLabel>
+                  <FormControl>
+                    <Input type="number" step="0.01" placeholder="0.00" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <div className="flex space-x-2 pt-4">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
-              Cancel
-            </Button>
-            <Button type="submit" className="flex-1">
-              Save Changes
-            </Button>
-          </div>
-        </form>
+            
+            <div className="flex space-x-2 pt-4">
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+                Cancel
+              </Button>
+              <Button type="submit" className="flex-1">
+                Save Changes
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );
