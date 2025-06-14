@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NetWorthSummary } from "@/types/finance";
 import { formatCurrency } from "@/utils/calculations";
-import { Wallet, TrendingUp, TrendingDown } from "lucide-react";
+import { Scale, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 
 interface SummaryMetricsProps {
   summary: NetWorthSummary;
@@ -28,19 +28,19 @@ export const SummaryMetrics = ({ summary }: SummaryMetricsProps) => {
       <MetricCard
         title="Net Worth"
         value={formatCurrency(summary.netWorth)}
-        icon={Wallet}
+        icon={Scale}
         colorClass="text-primary"
       />
       <MetricCard
         title="Total Assets"
         value={formatCurrency(summary.totalAssets)}
-        icon={TrendingUp}
+        icon={ArrowUpCircle}
         colorClass="text-success"
       />
       <MetricCard
         title="Total Liabilities"
         value={formatCurrency(summary.totalLiabilities)}
-        icon={TrendingDown}
+        icon={ArrowDownCircle}
         colorClass="text-destructive"
       />
     </div>

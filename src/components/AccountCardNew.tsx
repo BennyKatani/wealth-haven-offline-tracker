@@ -1,7 +1,21 @@
-import { Account } from "@/types/finance";
+
+import { Account, AccountType } from "@/types/finance";
 import { formatCurrency, getAccountTypeLabel } from "@/utils/calculations";
 import { Button } from "@/components/ui/button";
-import { Trash2, TrendingUp, TrendingDown, Landmark, CreditCard, Pencil } from "lucide-react";
+import { 
+  Trash2, 
+  Pencil, 
+  Landmark, 
+  CreditCard, 
+  TrendingUp,
+  Home,
+  Car,
+  Bitcoin,
+  PiggyBank,
+  BarChart,
+  Handshake,
+  Wallet
+} from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface AccountCardNewProps {
@@ -10,23 +24,36 @@ interface AccountCardNewProps {
   onEdit: (account: Account) => void;
 }
 
-const AccountIcon = ({ type, isAsset }: { type: string; isAsset: boolean }) => {
-  if (type === "bank") return <Landmark className="h-5 w-5" />;
-  if (type === "credit_card") return <CreditCard className="h-5 w-5" />;
-  return isAsset ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />;
+const AccountIcon = ({ type }: { type: AccountType }) => {
+  const iconMap: Record<AccountType, React.ElementType> = {
+    checking: Landmark,
+    savings: PiggyBank,
+    investment: BarChart,
+    retirement: PiggyBank,
+    property: Home,
+    vehicle: Car,
+    crypto: Bitcoin,
+    cash: Wallet,
+    credit_card: CreditCard,
+    loan: Handshake,
+    mortgage: Home,
+    other: TrendingUp,
+  };
+
+  const IconComponent = iconMap[type] || TrendingUp;
+  return <IconComponent className="h-5 w-5" />;
 };
 
 export const AccountCardNew = ({ account, onDelete, onEdit }: AccountCardNewProps) => {
-  const borderColorClass = account.isAsset ? "border-l-4 border-success" : "border-l-4 border-destructive";
   const textColorClass = account.isAsset ? "text-success" : "text-destructive";
 
   return (
-    <Card className={`shadow-md hover:shadow-lg transition-shadow duration-300 ${borderColorClass}`}>
+    <Card className="bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl transition-all duration-300 hover:border-white/20 hover:scale-[1.02]">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold text-foreground">{account.name}</CardTitle>
           <div className={textColorClass}>
-            <AccountIcon type={account.type} isAsset={account.isAsset} />
+            <AccountIcon type={account.type} />
           </div>
         </div>
         <p className="text-xs text-muted-foreground pt-1">
