@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,6 +54,13 @@ export const AddAccountSheet = ({ isOpen, onOpenChange, onAccountAdded }: AddAcc
   const [balance, setBalance] = useState("");
   const [type, setType] = useState<AccountType | undefined>(undefined);
   const [isAsset, setIsAsset] = useState(true);
+  const [currencySymbol, setCurrencySymbol] = useState(storageUtils.getSettings().currencySymbol);
+
+  useEffect(() => {
+    if (isOpen) {
+      setCurrencySymbol(storageUtils.getSettings().currencySymbol);
+    }
+  }, [isOpen]);
 
   const handleSubmit = () => {
     if (!name || !balance || !type) {
@@ -133,7 +140,7 @@ export const AddAccountSheet = ({ isOpen, onOpenChange, onAccountAdded }: AddAcc
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="balance" className="text-left">Current Balance (₪)</Label>
+            <Label htmlFor="balance" className="text-left">Current Balance ({currencySymbol})</Label>
             <Input
               id="balance"
               type="number"

@@ -9,7 +9,7 @@ interface SummaryMetricsProps {
 }
 
 const MetricCard = ({ title, value, icon: Icon, colorClass }: { title: string; value: string; icon: React.ElementType; colorClass: string }) => (
-  <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+  <Card className="bg-black/[.65] backdrop-blur-lg border border-white/10 rounded-xl transition-all duration-300 hover:border-white/20 hover:scale-[1.02]">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium text-muted-foreground">
         {title}
