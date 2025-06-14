@@ -1,4 +1,3 @@
-
 import { Account, AccountType } from "@/types/finance";
 import { formatCurrency, getAccountTypeLabel } from "@/utils/calculations";
 import { Button } from "@/components/ui/button";
@@ -48,7 +47,7 @@ export const AccountCardNew = ({ account, onDelete, onEdit }: AccountCardNewProp
   const textColorClass = account.isAsset ? "text-success" : "text-destructive";
 
   return (
-    <Card className="bg-black/20 backdrop-blur-lg border border-white/10 rounded-xl transition-all duration-300 hover:border-white/20 hover:scale-[1.02]">
+    <Card className="bg-black/[.65] backdrop-blur-lg border border-white/10 rounded-xl transition-all duration-300 hover:border-white/20 hover:scale-[1.02]">
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold text-foreground">{account.name}</CardTitle>

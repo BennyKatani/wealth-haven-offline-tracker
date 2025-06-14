@@ -17,7 +17,7 @@ export const AccountSection = ({ accounts, onAccountDeleted, onAccountEdited }: 
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       <Card className="shadow-sm bg-transparent border-0">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-success">Assets</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-white">Assets</CardTitle>
         </CardHeader>
         <CardContent>
           {assets.length > 0 ? (
@@ -34,7 +34,7 @@ export const AccountSection = ({ accounts, onAccountDeleted, onAccountEdited }: 
 
       <Card className="shadow-sm bg-transparent border-0">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-destructive">Liabilities</CardTitle>
+          <CardTitle className="text-2xl font-semibold text-white">Liabilities</CardTitle>
         </CardHeader>
         <CardContent>
           {liabilities.length > 0 ? (
