@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 interface AccountSectionProps {
   accounts: Account[];
   onAccountDeleted: (accountId: string) => void;
+  onAccountEdited: (account: Account) => void;
 }
 
-export const AccountSection = ({ accounts, onAccountDeleted }: AccountSectionProps) => {
+export const AccountSection = ({ accounts, onAccountDeleted, onAccountEdited }: AccountSectionProps) => {
   const assets = accounts.filter((acc) => acc.isAsset);
   const liabilities = accounts.filter((acc) => !acc.isAsset);
 
@@ -22,7 +23,7 @@ export const AccountSection = ({ accounts, onAccountDeleted }: AccountSectionPro
           {assets.length > 0 ? (
             <div className="space-y-4">
               {assets.map((account) => (
-                <AccountCardNew key={account.id} account={account} onDelete={onAccountDeleted} />
+                <AccountCardNew key={account.id} account={account} onDelete={onAccountDeleted} onEdit={onAccountEdited} />
               ))}
             </div>
           ) : (
@@ -39,7 +40,7 @@ export const AccountSection = ({ accounts, onAccountDeleted }: AccountSectionPro
           {liabilities.length > 0 ? (
             <div className="space-y-4">
               {liabilities.map((account) => (
-                <AccountCardNew key={account.id} account={account} onDelete={onAccountDeleted} />
+                <AccountCardNew key={account.id} account={account} onDelete={onAccountDeleted} onEdit={onAccountEdited} />
               ))}
             </div>
           ) : (

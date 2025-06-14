@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Account, NetWorthSummary } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
@@ -6,6 +7,7 @@ import { DashboardHeader } from '@/components/DashboardHeader';
 import { SummaryMetrics } from '@/components/SummaryMetrics';
 import { AccountSection } from '@/components/AccountSection';
 import { AddAccountSheet } from '@/components/AddAccountSheet';
+import { EditAccountDialog } from '@/components/EditAccountDialog';
 
 const Index = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -18,6 +20,8 @@ const Index = () => {
     changePercentage: 0,
   });
   const [isAddAccountSheetOpen, setIsAddAccountSheetOpen] = useState(false);
+  const [isEditAccountDialogOpen, setIsEditAccountDialogOpen] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<Account | null>(null);
 
   useEffect(() => {
     loadData();
@@ -41,12 +45,22 @@ const Index = () => {
   };
 
   const handleAccountAdded = () => {
-    loadData(); 
+    loadData();
   };
 
   const handleAccountDeleted = (accountId: string) => {
     storageUtils.deleteAccount(accountId);
     loadData();
+  };
+  
+  const handleOpenEditDialog = (account: Account) => {
+    setEditingAccount(account);
+    setIsEditAccountDialogOpen(true);
+  };
+
+  const handleAccountUpdated = () => {
+    loadData();
+    setIsEditAccountDialogOpen(false);
   };
 
   if (loading) {
@@ -61,16 +75,26 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-blue-50 dark:from-neutral-900 dark:to-blue-950 p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-black dark:to-neutral-900 p-4 md:p-8">
       <div className="container mx-auto max-w-6xl">
         <DashboardHeader onAddAccount={() => setIsAddAccountSheetOpen(true)} />
         <SummaryMetrics summary={summary} />
-        <AccountSection accounts={accounts} onAccountDeleted={handleAccountDeleted} />
+        <AccountSection 
+          accounts={accounts} 
+          onAccountDeleted={handleAccountDeleted}
+          onAccountEdited={handleOpenEditDialog} 
+        />
       </div>
       <AddAccountSheet
         isOpen={isAddAccountSheetOpen}
         onOpenChange={setIsAddAccountSheetOpen}
         onAccountAdded={handleAccountAdded}
+      />
+      <EditAccountDialog
+        open={isEditAccountDialogOpen}
+        onOpenChange={setIsEditAccountDialogOpen}
+        account={editingAccount}
+        onAccountUpdated={handleAccountUpdated}
       />
     </div>
   );

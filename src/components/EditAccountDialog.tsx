@@ -23,6 +23,7 @@ export const EditAccountDialog = ({ open, onOpenChange, account, onAccountUpdate
     type: '' as AccountType,
     balance: '',
     isAsset: true,
+    category: '',
   });
 
   const accountCategories = getAccountCategories();
@@ -34,6 +35,7 @@ export const EditAccountDialog = ({ open, onOpenChange, account, onAccountUpdate
         type: account.type,
         balance: account.balance.toString(),
         isAsset: account.isAsset,
+        category: account.category,
       });
     }
   }, [account]);
@@ -50,7 +52,7 @@ export const EditAccountDialog = ({ open, onOpenChange, account, onAccountUpdate
       type: formData.type,
       balance: parseFloat(formData.balance),
       isAsset: formData.isAsset,
-      category: formData.type,
+      category: formData.type, // Update category to match type
     };
 
     storageUtils.updateAccount(account.id, updates);
