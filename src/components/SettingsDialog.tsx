@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { UserSettings, CURRENCIES } from '@/types/finance';
 import { storageUtils } from '@/utils/storage';
-import { Euro, Gbp, DollarSign } from 'lucide-react';
+import { Euro, PoundSterling, DollarSign } from 'lucide-react';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -17,7 +17,7 @@ interface SettingsDialogProps {
 const currencyIcons: { [key: string]: React.ElementType } = {
   USD: DollarSign,
   EUR: Euro,
-  GBP: Gbp,
+  GBP: PoundSterling,
 };
 
 export const SettingsDialog = ({ open, onOpenChange, onSettingsUpdated }: SettingsDialogProps) => {
