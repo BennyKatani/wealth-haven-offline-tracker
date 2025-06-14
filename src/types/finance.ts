@@ -1,4 +1,3 @@
-
 export interface Account {
   id: string;
   name: string;
@@ -67,14 +66,8 @@ export interface NetWorthSummary {
 }
 
 export const CURRENCIES = [
-  { code: 'USD', symbol: '$', name: 'US Dollar' },
-  { code: 'EUR', symbol: '€', name: 'Euro' },
-  { code: 'GBP', symbol: '£', name: 'British Pound' },
-  { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' },
-  { code: 'AUD', symbol: 'A$', name: 'Australian Dollar' },
-  { code: 'CHF', symbol: 'CHF', name: 'Swiss Franc' },
-  { code: 'CNY', symbol: '¥', name: 'Chinese Yuan' },
-  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
-  { code: 'BRL', symbol: 'R$', name: 'Brazilian Real' },
   { code: 'ILS', symbol: '₪', name: 'Israeli New Shekel' },
+  { code: 'USD', symbol: '$', name: 'US Dollar' },
+  { code: 'GBP', symbol: '£', name: 'British Pound' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
 ];
