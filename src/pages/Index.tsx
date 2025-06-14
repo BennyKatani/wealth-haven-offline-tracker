@@ -75,7 +75,10 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black to-neutral-900 p-4 md:p-8">
+    <div 
+      className="min-h-screen bg-cover bg-center p-4 md:p-8"
+      style={{ backgroundImage: "url('/background.png')" }}
+    >
       <div className="container mx-auto max-w-6xl">
         <DashboardHeader onAddAccount={() => setIsAddAccountSheetOpen(true)} />
         <SummaryMetrics summary={summary} />
