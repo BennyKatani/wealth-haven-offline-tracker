@@ -1,4 +1,3 @@
-
 export interface Account {
   id: string;
   name: string;
@@ -36,7 +35,7 @@ export interface UserSettings {
   locale: string;
 }
 
-export type AccountType = 
+export type AccountType =
   | 'checking'
   | 'savings'
   | 'investment'
@@ -44,6 +43,7 @@ export type AccountType =
   | 'property'
   | 'vehicle'
   | 'crypto'
+  | 'cash'
   | 'credit_card'
   | 'loan'
   | 'mortgage'
