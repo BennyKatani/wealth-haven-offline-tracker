@@ -42,7 +42,11 @@ export const SettingsDialog = ({ open, onOpenChange, onSettingsUpdated }: Settin
           .single();
         
         if (data) {
-          setSettings(data);
+          setSettings({
+            currency: data.currency,
+            currencySymbol: data.currency_symbol,
+            locale: data.locale,
+          });
         } else if (error && error.code !== 'PGRST116') { // Ignore 'no rows found'
           toast.error("Failed to load settings.");
         }
