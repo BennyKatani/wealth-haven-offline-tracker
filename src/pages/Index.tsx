@@ -1,16 +1,22 @@
 
 import { useState, useEffect } from 'react';
-import { Account, NetWorthSummary } from '@/types/finance';
-import { storageUtils } from '@/utils/storage';
+import { useNavigate } from 'react-router-dom';
+import { Account, NetWorthSummary, UserSettings } from '@/types/finance';
 import { calculateNetWorth } from '@/utils/calculations';
 import { DashboardHeader } from '@/components/DashboardHeader';
 import { SummaryMetrics } from '@/components/SummaryMetrics';
 import { AccountSection } from '@/components/AccountSection';
 import { AddAccountSheet } from '@/components/AddAccountSheet';
-import { EditAccountDialog } from '@/components/EditAccountDialog';
 import { SettingsDialog } from '@/components/SettingsDialog';
+import { useAuth } from '@/components/AuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import { EditAccountSupabaseDialog } from '@/components/EditAccountSupabaseDialog';
+import { toast } from 'sonner';
 
 const Index = () => {
+  const { session, loading: authLoading, user } = useAuth();
+  const navigate = useNavigate();
+
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState<NetWorthSummary>({
@@ -26,21 +32,47 @@ const Index = () => {
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
 
   useEffect(() => {
-    loadData();
-  }, []);
+    if (!authLoading && !session) {
+      navigate('/auth');
+    }
+  }, [session, authLoading, navigate]);
+
+  useEffect(() => {
+    if (session) {
+      loadData();
+    }
+  }, [session]);
 
   useEffect(() => {
     setSummary(calculateNetWorth(accounts));
   }, [accounts]);
 
-  const loadData = () => {
+  const loadData = async () => {
     setLoading(true);
+    if (!user) return;
     try {
-      const loadedAccounts = storageUtils.getAccounts();
+      const { data, error } = await supabase
+        .from('accounts')
+        .select('*')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+
+      const loadedAccounts: Account[] = data.map((acc: any) => ({
+        id: acc.id,
+        name: acc.name,
+        balance: acc.balance,
+        type: acc.subtype,
+        isAsset: acc.type === 'asset',
+        category: acc.subtype,
+        createdAt: acc.created_at,
+        updatedAt: acc.updated_at,
+      }));
+
       setAccounts(loadedAccounts);
     } catch (error) {
       console.error('Error loading data:', error);
-      // TODO: Show a toast message for error
+      toast.error('Failed to load financial data.');
     } finally {
       setLoading(false);
     }
@@ -50,9 +82,16 @@ const Index = () => {
     loadData();
   };
 
-  const handleAccountDeleted = (accountId: string) => {
-    storageUtils.deleteAccount(accountId);
-    loadData();
+  const handleAccountDeleted = async (accountId: string) => {
+    try {
+      const { error } = await supabase.from('accounts').delete().match({ id: accountId });
+      if (error) throw error;
+      toast.success('Account deleted successfully');
+      loadData();
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      toast.error('Failed to delete account.');
+    }
   };
   
   const handleOpenEditDialog = (account: Account) => {
@@ -66,10 +105,11 @@ const Index = () => {
   };
   
   const handleSettingsUpdated = () => {
+    // Re-fetch data in case currency symbol display needs to be updated globally
     loadData();
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
@@ -101,7 +141,7 @@ const Index = () => {
         onOpenChange={setIsAddAccountSheetOpen}
         onAccountAdded={handleAccountAdded}
       />
-      <EditAccountDialog
+      <EditAccountSupabaseDialog
         open={isEditAccountDialogOpen}
         onOpenChange={setIsEditAccountDialogOpen}
         account={editingAccount}

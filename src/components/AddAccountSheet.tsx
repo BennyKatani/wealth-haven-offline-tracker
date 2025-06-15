@@ -20,9 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Account, AccountType } from "@/types/finance";
-import { generateId } from "@/utils/calculations";
-import { storageUtils } from "@/utils/storage";
+import { AccountType } from "@/types/finance";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "./AuthProvider";
+import { toast } from "sonner";
 
 interface AddAccountSheetProps {
   isOpen: boolean;
@@ -48,46 +49,56 @@ const accountTypes: { value: AccountType; label: string; isAsset: boolean }[] = 
 const assetTypes = accountTypes.filter(t => t.isAsset);
 const liabilityTypes = accountTypes.filter(t => !t.isAsset);
 
-
 export const AddAccountSheet = ({ isOpen, onOpenChange, onAccountAdded }: AddAccountSheetProps) => {
+  const { user } = useAuth();
   const [name, setName] = useState("");
   const [balance, setBalance] = useState("");
   const [type, setType] = useState<AccountType | undefined>(undefined);
   const [isAsset, setIsAsset] = useState(true);
-  const [currencySymbol, setCurrencySymbol] = useState(storageUtils.getSettings().currencySymbol);
+  const [currencySymbol, setCurrencySymbol] = useState('$'); // Default, will be updated
 
   useEffect(() => {
-    if (isOpen) {
-      setCurrencySymbol(storageUtils.getSettings().currencySymbol);
-    }
-  }, [isOpen]);
+    const fetchSettings = async () => {
+      if (isOpen && user) {
+        const { data } = await supabase
+          .from('user_settings')
+          .select('currency_symbol')
+          .eq('user_id', user.id)
+          .single();
+        if (data) {
+          setCurrencySymbol(data.currency_symbol);
+        }
+      }
+    };
+    fetchSettings();
+  }, [isOpen, user]);
 
-  const handleSubmit = () => {
-    if (!name || !balance || !type) {
-      // TODO: Add proper validation and toast messages
-      console.error("Form validation failed");
+  const handleSubmit = async () => {
+    if (!name || !balance || !type || !user) {
+      toast.error("Please fill all fields.");
       return;
     }
     
-    const newAccount: Account = {
-      id: generateId(),
+    const { error } = await supabase.from('accounts').insert({
+      user_id: user.id,
       name,
       balance: parseFloat(balance),
-      type,
-      isAsset: isAsset,
-      category: type,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+      type: isAsset ? 'asset' : 'liability',
+      subtype: type,
+    });
 
-    storageUtils.addAccount(newAccount);
-    onAccountAdded();
-    // Reset form and close sheet
-    setName("");
-    setBalance("");
-    setType(undefined);
-    setIsAsset(true);
-    onOpenChange(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Account added successfully!");
+      onAccountAdded();
+      // Reset form and close sheet
+      setName("");
+      setBalance("");
+      setType(undefined);
+      setIsAsset(true);
+      onOpenChange(false);
+    }
   };
 
   const handleTabChange = (value: string) => {

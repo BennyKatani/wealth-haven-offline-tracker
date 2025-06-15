@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { UserSettings, CURRENCIES } from '@/types/finance';
-import { storageUtils } from '@/utils/storage';
 import { Euro, PoundSterling, DollarSign } from 'lucide-react';
+import { useAuth } from './AuthProvider';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface SettingsDialogProps {
   open: boolean;
@@ -20,31 +22,64 @@ const currencyIcons: { [key: string]: React.ElementType } = {
   GBP: PoundSterling,
 };
 
+const defaultSettings: UserSettings = {
+  currency: 'USD',
+  currencySymbol: '$',
+  locale: 'en-US'
+};
+
 export const SettingsDialog = ({ open, onOpenChange, onSettingsUpdated }: SettingsDialogProps) => {
-  const [settings, setSettings] = useState<UserSettings>(storageUtils.getSettings());
+  const { user } = useAuth();
+  const [settings, setSettings] = useState<UserSettings>(defaultSettings);
 
   useEffect(() => {
-    if (open) {
-      setSettings(storageUtils.getSettings());
-    }
-  }, [open]);
+    const fetchSettings = async () => {
+      if (open && user) {
+        const { data, error } = await supabase
+          .from('user_settings')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+        
+        if (data) {
+          setSettings(data);
+        } else if (error && error.code !== 'PGRST116') { // Ignore 'no rows found'
+          toast.error("Failed to load settings.");
+        }
+      }
+    };
+    fetchSettings();
+  }, [open, user]);
 
   const handleCurrencyChange = (currencyCode: string) => {
     const currency = CURRENCIES.find(c => c.code === currencyCode);
     if (currency) {
-      const newSettings: UserSettings = {
+      setSettings(prev => ({
+        ...prev,
         currency: currency.code,
         currencySymbol: currency.symbol,
-        locale: 'en-US' // Default locale, could be expanded later
-      };
-      setSettings(newSettings);
+      }));
     }
   };
 
-  const handleSave = () => {
-    storageUtils.saveSettings(settings);
-    onSettingsUpdated();
-    onOpenChange(false);
+  const handleSave = async () => {
+    if (!user) return;
+    
+    const { error } = await supabase.from('user_settings').upsert({
+      user_id: user.id,
+      currency: settings.currency,
+      currency_symbol: settings.currencySymbol,
+      locale: settings.locale,
+      updated_at: new Date().toISOString()
+    });
+
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Settings saved successfully!');
+      onSettingsUpdated();
+      onOpenChange(false);
+    }
   };
 
   return (
